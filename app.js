@@ -170,6 +170,7 @@ var controller = (function(budgetCtrl, UICntrl) {
         UICntrl.clearPanel(); 
     
         //5. calculate and display budget
+        updateBudget();
 
     }
 
