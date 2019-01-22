@@ -11,6 +11,14 @@ var budgetController = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
+    }   
+
+    var calculateTotal = function(type) {
+        var sum = 0;
+        data.allItems[type].forEach(function(current) {
+            sum += current.value;
+                data.totals[type] = sum;
+        });
     }
 
 
@@ -22,7 +30,9 @@ var budgetController = (function () {
         totals: {
             exp: 0,
             inc: 0
-        }
+        },
+        budget: 0,
+        percentage: -1
     }
 
     return {
@@ -49,8 +59,30 @@ var budgetController = (function () {
 
             return newItem;
         },
+
+        calculateBudget: function() {
+            //calculate total income and expenses
+            calculateTotal('inc');
+            calculateTotal('exp');
+
+            //calculate the budget: income-expenses
+            data.budget = data.totals.inc - data.totals.exp;
+
+            //Calculate the percentage
+             data.percentage =((data.totals.exp / data.totals.inc) * 100).toFixed(2);
+        },
+
+        getBudget: function() {
+            return {
+                budget: data.budget,
+                inc: data.totals.inc,
+                exp: data.totals.exp,
+                percentage: data.percentage
+            }
+        },
+
         testing: function() {
-            console.log(data);
+            console.log(data.budget);
         }
     }
 
@@ -143,10 +175,13 @@ var controller = (function(budgetCtrl, UICntrl) {
 
     var updateBudget = function() {
         //1. calculate budget
+        budgetCtrl.calculateBudget();
 
         //2. return the budget
+        var budget = budgetCtrl.getBudget();
 
         //3. display budget on UI
+        console.log(budget);
 
     }
 
@@ -157,20 +192,27 @@ var controller = (function(budgetCtrl, UICntrl) {
     
         input = UICntrl.getInput();
 
-        //2. add item to budget controller
-    
-        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-        //3. add item to UI
+        //Fixing conflicts
+
+        if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+            //1. add item to budget controller
     
-        UICntrl.addListItem(newItem, input.type);
-    
-        //4. Clear the fields
-    
-        UICntrl.clearPanel(); 
-    
-        //5. calculate and display budget
-        updateBudget();
+            newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+
+            //2. add item to UI
+        
+            UICntrl.addListItem(newItem, input.type);
+        
+            //3. Clear the fields
+        
+            UICntrl.clearPanel(); 
+        
+            //4. calculate and display budget
+            updateBudget();
+        }
+
+        
 
     }
 
