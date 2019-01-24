@@ -101,7 +101,8 @@ var UIController = (function () {
         budgetLabel: '.budget__value',
         incLabel: '.budget__income--value',
         expLabel: '.budget__expenses--value',
-        expPercentage: '.budget__expenses--percentage'
+        expPercentage: '.budget__expenses--percentage',
+        container: '.container'
     }
 
     return {
@@ -119,10 +120,10 @@ var UIController = (function () {
 
             if (type === 'inc') {
                 element = DOMStrings.incomeContainer;
-                html = '<div class="item clearfix" id="income-%id%"> <div class="item__description">%description%</div> <div class="right clearfix"> <div class="item__value">%value%</div> <div class="item__delete"> <button class="item__delete--btn"> <i class="ion-ios-close-outline"></i></button></div> </div> </div>';
+                html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description%</div> <div class="right clearfix"> <div class="item__value">%value%</div> <div class="item__delete"> <button class="item__delete--btn"> <i class="ion-ios-close-outline"></i></button></div> </div> </div>';
             } else if (type === 'exp') {
                 element = DOMStrings.expensesContainer;
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">&21%&</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';  
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">&21%&</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';  
             }
             
             
@@ -131,7 +132,6 @@ var UIController = (function () {
             newHTML = html.replace('%id%', obj.id);
             newHTML = newHTML.replace('%description%', obj.description);
             newHTML = newHTML.replace('%value%', obj.value);
-            
 
             //insert the html into the DOM
             
@@ -189,6 +189,9 @@ var controller = (function(budgetCtrl, UICntrl) {
                 ctrlAddItem();
             }
         });
+
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+        
     
     }
 
@@ -236,6 +239,26 @@ var controller = (function(budgetCtrl, UICntrl) {
 
     }
 
+    var ctrlDeleteItem = function(event) {
+        var itemID, splitID, type, ID;
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if (itemID) {
+            splitID =   itemID.split('-');
+            type = splitID[0];
+            ID = splitID[1];
+
+            // 1. delete the item from UI
+
+            // 2. delet the item from data structure
+
+            // 3. update the total
+
+            
+        }
+
+
+    }
 
     return {
         init: function() {
