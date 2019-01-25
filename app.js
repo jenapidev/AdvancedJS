@@ -17,8 +17,8 @@ var budgetController = (function () {
         var sum = 0;
         data.allItems[type].forEach(function(current) {
             sum += current.value;
-                data.totals[type] = sum;
         });
+        data.totals[type] = sum;
     }
 
 
@@ -175,10 +175,9 @@ var UIController = (function () {
             document.querySelector(DOMStrings.incLabel).textContent = '+ ' + obj.inc;
             document.querySelector(DOMStrings.expLabel).textContent = '- ' + obj.exp;
             
-            var percentage = obj.percentage;
 
-            if (percentage === true) {
-                document.querySelector(DOMStrings.expPercentage).textContent = percentage + '%';
+            if (obj.percentage > 0) {
+                document.querySelector(DOMStrings.expPercentage).textContent = obj.percentage + '%';
             } else {
                 document.querySelector(DOMStrings.expPercentage).textContent = '---';
             }
