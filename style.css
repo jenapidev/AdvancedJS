@@ -95,7 +95,7 @@ body {
 .budget__income--percentage,
 .budget__expenses--percentage {
     float: left;
-    width: 34px;
+    width: 45px;
     font-size: 11px;
     padding: 3px 0;
     margin-left: 10px;
@@ -227,7 +227,7 @@ h2 {
     background-color: #FFDAD9;
     padding: 3px;
     border-radius: 3px;
-    width: 32px;
+    width: 45px;
     text-align: center;
 }
 

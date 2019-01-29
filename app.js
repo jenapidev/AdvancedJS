@@ -10,7 +10,7 @@ var budgetController = (function () {
 
     Expense.prototype.calcPercentages = function(totalInc) {
         if(totalInc > 0){
-            this.percentage = Math.round((this.value / totalInc) * 100);
+            this.percentage = ((this.value / totalInc) * 100).toFixed(2);
         } else {
             this.percentage = -1;
         }
@@ -97,7 +97,7 @@ var budgetController = (function () {
             data.budget = data.totals.inc - data.totals.exp;
 
             //Calculate the percentage
-             data.percentage =Math.round((data.totals.exp / data.totals.inc) * 100);
+             data.percentage =((data.totals.exp / data.totals.inc) * 100).toFixed(2);
         },
 
         calculatePercentages: function() {
@@ -149,6 +149,24 @@ var UIController = (function () {
         expensesPercentage: '.item__percentage'
     }
 
+    var formatNumber = function(num, type) {
+        var numSplit, int, dec, sign;
+
+        num = Math.abs(num);
+        num = num.toFixed(2);
+
+        numSplit = num.split('.');
+        
+        int = numSplit[0];
+        if (int.length > 3) {
+            int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3);
+            
+        }
+
+        dec = numSplit[1];
+        return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
+    }
+
     return {
         getInput: function() {
             return{
@@ -175,7 +193,7 @@ var UIController = (function () {
             //replace the placeholder text with some data
             newHTML = html.replace('%id%', obj.id);
             newHTML = newHTML.replace('%description%', obj.description);
-            newHTML = newHTML.replace('%value%', obj.value);
+            newHTML = newHTML.replace('%value%', formatNumber(obj.value, type));
             
             //insert the html into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHTML);
@@ -202,9 +220,12 @@ var UIController = (function () {
         },
 
         displayBudget: function(obj) {
-            document.querySelector(DOMStrings.budgetLabel).textContent ='+ ' + obj.budget;
-            document.querySelector(DOMStrings.incLabel).textContent = '+ ' + obj.inc;
-            document.querySelector(DOMStrings.expLabel).textContent = '- ' + obj.exp;
+            var type;
+            obj.budget >= 0 ? type = 'inc' : type = 'exp';
+
+            document.querySelector(DOMStrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMStrings.incLabel).textContent =  formatNumber(obj.inc, 'inc');
+            document.querySelector(DOMStrings.expLabel).textContent = formatNumber(obj.exp, 'exp');
             
 
             if (obj.percentage > 0) {
@@ -342,9 +363,9 @@ var controller = (function(budgetCtrl, UICntrl) {
         init: function() {
             console.log('Aplication has been started sucssesfully');
             UICntrl.displayBudget({
-                budget: 0,
-                inc: 0,
-                exp: 0
+                budget: 0.00,
+                inc: 0.00,
+                exp: 0.00
             })
             setupEventsListeners();
         }
