@@ -196,7 +196,6 @@ var UIController = (function () {
             }
             
             
-
             //replace the placeholder text with some data
             newHTML = html.replace('%id%', obj.id);
             newHTML = newHTML.replace('%description%', obj.description);
